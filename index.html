@@ -10,11 +10,14 @@
 
     <style>
         :root {
-            --bg1: #ffd6e7;
-            --bg2: #ffeef6;
-            --card: #ffffffcc;
-            --yes: #ff3b7a;
-            --yesHover: #ff1f68;
+            --bg1: #ff6b9d;
+            --bg2: #ffc3dc;
+            --bg3: #fff0f6;
+            --card: #ffffffee;
+            --yes: #ff1744;
+            --yesHover: #d50000;
+            --accent: #ff4081;
+            --shadow: rgba(255, 20, 147, 0.3);
         }
 
         * { box-sizing: border-box; }
@@ -26,10 +29,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at top, var(--bg2), var(--bg1));
-            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+            font-family: 'Georgia', 'Times New Roman', serif;
             overflow: hidden;
             padding: 20px;
+            position: relative;
+        }
+
+        /* Floating hearts background animation */
+        body::before {
+            content: '❤️ 💕 💖 💗 💝 ❤️ 💕 💖';
+            position: fixed;
+            top: -50px;
+            left: 0;
+            right: 0;
+            font-size: 30px;
+            letter-spacing: 50px;
+            opacity: 0.15;
+            animation: float 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
         }
 
         /* FULL-SCREEN CONFETTI CANVAS */
@@ -45,13 +68,42 @@
         .card {
             width: 100%;
             max-width: 720px;
-            padding: clamp(20px, 5vw, 26px);
+            padding: clamp(30px, 5vw, 40px);
             background: var(--card);
-            backdrop-filter: blur(10px);
-            border-radius: 22px;
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 18px 60px rgba(0,0,0,.15);
+            box-shadow: 0 20px 80px var(--shadow),
+                        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
             margin: 0 auto;
+            position: relative;
+            border: 3px solid rgba(255, 105, 180, 0.2);
+        }
+
+        /* Decorative hearts on card corners */
+        .card::before,
+        .card::after {
+            content: '💖';
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .card::before {
+            top: -20px;
+            left: -20px;
+        }
+
+        .card::after {
+            bottom: -20px;
+            right: -20px;
+            animation-delay: 1s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .art {
@@ -64,9 +116,16 @@
         }
 
         h1 {
-            font-size: clamp(24px, 5vw, 44px);
+            font-size: clamp(28px, 6vw, 48px);
             margin: 12px auto 18px;
             max-width: 100%;
+            background: linear-gradient(135deg, #ff1744, #ff4081, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.1);
         }
 
         .button-zone {
@@ -97,16 +156,26 @@
 
         #yesBtn {
             left: 18%;
-            background: var(--yes);
+            background: linear-gradient(135deg, var(--yes) 0%, #ff4081 100%);
             color: #fff;
+            box-shadow: 0 8px 20px rgba(255, 23, 68, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
         }
-        #yesBtn:hover { background: var(--yesHover); }
+        #yesBtn:hover {
+            background: linear-gradient(135deg, var(--yesHover) 0%, #e91e63 100%);
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.6);
+        }
 
         #noBtn {
             left: 62%;
-            background: #e5e7eb;
-            color: #111827;
+            background: linear-gradient(135deg, #ffc1e0 0%, #ffd8e8 100%);
+            color: #d81b60;
             position: absolute;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+        }
+
+        #noBtn:hover {
+            background: linear-gradient(135deg, #ffb3d9 0%, #ffc8df 100%);
         }
 
         #noBtn.free-move {
@@ -114,11 +183,19 @@
             z-index: 10000;
         }
 
+        #noBtn:disabled {
+            background: linear-gradient(135deg, #ffcce0 0%, #ffe0ec 100%);
+            color: #ad1457;
+        }
+
         .hint {
-            margin-top: 10px;
-            font-size: 13px;
-            opacity: .7;
+            margin-top: 15px;
+            font-size: 15px;
+            opacity: .8;
             font-style: italic;
+            color: #c2185b;
+            font-family: 'Georgia', serif;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .result {
@@ -128,26 +205,38 @@
         }
 
         .result h1 {
-            font-size: clamp(32px, 6vw, 48px);
+            font-size: clamp(36px, 7vw, 56px);
             margin: 10px auto;
+            animation: heartbeat 1.5s ease-in-out infinite;
         }
 
         .result h2 {
-            font-size: clamp(26px, 5vw, 38px);
-            margin: 10px auto;
+            font-size: clamp(28px, 5.5vw, 40px);
+            margin: 15px auto;
+            color: #c2185b;
         }
 
         .result h3 {
-            font-size: clamp(20px, 4vw, 28px);
-            margin: 10px auto;
+            font-size: clamp(22px, 4.5vw, 32px);
+            margin: 15px auto;
+            color: #d81b60;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10%, 30% { transform: scale(1.1); }
+            20%, 40% { transform: scale(1); }
         }
 
         .fireworks {
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             height: auto;
-            margin: 20px auto;
+            margin: 25px auto;
             display: block;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.8);
         }
 
         @keyframes pop {
